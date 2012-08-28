@@ -1,0 +1,17 @@
+{
+	"camera": {
+		"position": {
+			"x":0,
+			"y":0,
+			"z":120
+		},
+		"rotation": {
+			"x": 0,
+			"y":0,
+			"z":0
+		}
+	},
+	"duration":15,
+	"title":"TestScene"
+	
+}

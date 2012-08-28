@@ -15,87 +15,68 @@
 				}
 			},
 			"duration":15,
-			"title":"TestScene",
+			"title":"TestScene2",
 			"actors":[
 				{
-					"id":"joy",
-					"name":"Joy",
 					"position": {
-						"x": 0,
+						"x":0,
 						"y":0,
 						"z":0
 					},
-					"material":"img/cover.png",
-					"events":[
-						{
-							"frame":4,
-							"position": {
-								"x":15,
-								"y":0,
-								"z":0
-							},
-							"rotation": {
-								"x":0,
-								"y":0,
-								"z":0
-							}
-						},
-						{
-							"frame":6,
-							"position": {
-								"x":-1,
-								"y":0,
-								"z":0
-							},
-							"rotation": {
-								"x":0,
-								"y":0,
-								"z":0
-							}
-						}
-					]
+					"rotation": {
+						"x":0,
+						"y":0,
+						"z":0
+					},
+					"material" :"/skin.jpg"
 				}
 			],
 			"objects":[
 				{
-					"id":"board",
-					"title":"Board",
-					"position":{
-						"x":0,
+					"id":"Budgettavlan",
+					"position": {
+						"x":-0,
 						"y":0,
+						"z":-1
+					},
+					"rotation": {
+						"x":-0.1,
+						"y":-1,
 						"z":0
 					},
-					"rotation":{
-						"x":0,
-						"y":0,
-						"z":0
-					},
-					"parts":[
-						{ 
-							"material":"img/cover.png", 
-							"position":{"x":0, "y":0, "z":0}, "rotation":{ "x": 0, "y": 0, "z":0}, "with": 10, "height": 10, "depth": 10}
-					],
+					"parts":[{
+						"material": "http://localhost/budgettavla.jpg",
+						"width":50,
+						"height":50,
+						"depth":5,
+						"position":{
+							"x":0,
+							"y":0,
+							"z":0
+						},
+						"rotation":{
+							"x":0,
+							"y":0,
+							"z":0
+						}
+					}],
 					"events":[
-						/*{
-							"frame":4,
-							"position": {
-								"x":5,
-								"y":2,
-								"z":0
-							},
-							"rotation": {
-								"x":0,
-								"y":0,
-								"z":0
-							}
-						}*/
+						{
+						"frame":5,
+						"position":{
+							"x":10,
+							"y":0,
+							"z":0
+						},
+						"rotation":{
+							"x":-0.1,
+							"y":-1,
+							"z":0
+						}
+						}
 					]
 				}
 			],
-			"actions":{
-				"target":"joy",
-				
-			}
 		}
 	]
 }

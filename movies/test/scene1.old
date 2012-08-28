@@ -1,0 +1,96 @@
+{
+	"camera": {
+		"position": {
+			"x":0,
+			"y":0,
+			"z":120
+		},
+		"rotation": {
+			"x": 0,
+			"y":0,
+			"z":0
+		}
+	},
+	"duration":15,
+	"title":"TestScene",
+	"objects":[
+		{
+			"id":"joy",
+			"name":"Joy",
+			"position": {
+				"x": 0,
+				"y":0,
+				"z":0
+			},
+			"material":"img/cover.png",
+			"events":[
+				{
+					"frame":4,
+					"position": {
+						"x":15,
+						"y":0,
+						"z":0
+					},
+					"rotation": {
+						"x":0,
+						"y":0,
+						"z":0
+					}
+				},
+				{
+					"frame":6,
+					"position": {
+						"x":14,
+						"y":0,
+						"z":0
+					},
+					"rotation": {
+						"x":0,
+						"y":0,
+						"z":0
+					}
+				}
+			]
+		}
+	],
+	"objects":[
+		{
+			"id":"board",
+			"title":"Board",
+			"position":{
+				"x":0,
+				"y":0,
+				"z":0
+			},
+			"rotation":{
+				"x":0,
+				"y":0,
+				"z":0
+			},
+			"parts":[
+				{ 
+					"material":"img/cover.png", 
+					"position":{"x":0, "y":0, "z":0}, "rotation":{ "x": 0, "y": 0, "z":0}, "with": 10, "height": 10, "depth": 10}
+			],
+			"events":[
+				/*{
+					"frame":4,
+					"position": {
+						"x":5,
+						"y":2,
+						"z":0
+					},
+					"rotation": {
+						"x":0,
+						"y":0,
+						"z":0
+					}
+				}*/
+			]
+		}
+	],
+	"actions":{
+		"target":"joy",
+		
+	}
+}
