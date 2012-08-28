@@ -27,11 +27,11 @@ function blend(src, target, percent) {
 				var prop2 = target[key];
 				if(!isNaN(prop) && !isNaN(prop2)) {
 					var mix = ((parseFloat(prop2) - parseFloat(prop)) * parseFloat(percent)) + parseFloat(prop);
-				//	console.log("mix", mix);
+				//	// console.log("mix", mix);
 					newObj[key] = mix;
-					console.log(prop, prop2);
+					// console.log(prop, prop2);
 				} else if(typeof(prop) === "object") {
-			//		console.log("A");
+			//		// console.log("A");
 					newObj[key] = blend(prop, prop2, percent);
 				} else {
 					newObj[key] = prop;
@@ -41,6 +41,6 @@ function blend(src, target, percent) {
 			}
 		}
 	}
-//	console.log("Blend", newObj);
+//	// console.log("Blend", newObj);
 	return newObj;
 }

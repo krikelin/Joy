@@ -47,7 +47,7 @@ function addOrEditTextOverlay(id, text, left, top) {
 		txt.setAttribute("style", "z-index: 12; font-size:35px; font-family: Terminal; color: #FFFFFF; text-shadow: 1px 1px 0px #000000; position: absolute; left: " + left +"px; top: " + top + "px; width:70%; height:32px");
 		txt.innerHTML = text;
 		txt.setAttribute("id", "label_" + id);
-		console.log(txt);
+		// console.log(txt);
 		document.body.appendChild(txt);
 	} else {
 		txt.innerHTML = text;
@@ -70,7 +70,7 @@ var tileset = null;
 var scene = null;
 var camera = null;
 window.onkeyup = function (e) {
-	 console.log(e);
+	 // console.log(e);
 	
 	if(e.keyIdentifier === "U+0057") {
 		move_z = 0;
@@ -82,7 +82,7 @@ window.onkeyup = function (e) {
 	} 
 };
 window.onkeydown = function (e) {
-	 console.log(e);
+	 // console.log(e);
 	
 	if(e.keyIdentifier === "U+0057") {
 		move_z = -100;
@@ -97,10 +97,11 @@ window.onkeydown = function (e) {
 @class movie
 **/
 function Movie (url) {
+	var si = 0;
 	
 	this.url = url;
-	this.playing = null;
-	this.currentScene  = {};
+	var playing = null;
+	this.currentScene  = null;
 	var xmlHttp = new XMLHttpRequest();
 	xmlHttp.open("GET", url + "/movie.json", false);
 	xmlHttp.send();
@@ -122,7 +123,22 @@ function Movie (url) {
 		var scene = new Scene(this.movie.scenes[i], this);
 		this.scenes.push(scene);
 	}
+	var currentScene = this.scenes[0];
+	this.currentScene = currentScene;
+	this.nextScene = function () {
+		if(si < this.scenes.length) {
+			this.currentScene = this.scenes[si];
+			si++;
+		} else {
+			return false;
+		}
+	};
 	this.play = function () {
+		playing = setInterval(function () {
+			currentScene.renderNextFrame(0.01);
+			
+		}, STEP_LENGTH);
+		
 	};
 	this.setScene = function (index) {
 		this.currentScene = this.scenes[index];
@@ -130,17 +146,30 @@ function Movie (url) {
 }
 
 var STEP_LENGTH = 60 / 500;
-function Scene (sceneObj, movie) {
+function Scene (sceneObj, movie, parentScene) {
+	this.parentScene = parentScene;
 	this.motions = [];
-	
+	var currentFrame = 0;
+	this.renderNextFrame = function (p) {
+		this.renderFrame(currentFrame);
+		
+		currentFrame += p;
+	};
+		
 	this.sceneObj = sceneObj;
-	this.scene = new THREE.Scene();
+	this.scene = [];
+	if(typeof(parentScene) !== "undefined") {
+		this.scene = new THREE.Object3D();
+	} else {
+		this.scene = new THREE.Scene();
+	}
 	this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 11000);
 	this.camera.position = sceneObj.camera.position;
 	this.camera.rotation = sceneObj.camera.rotation;
 	this.actors = [];
 	this.objects = [];
 	this.events = [];
+	this.scenes = [];
 	/***
 	@function renderFrame
 	@description Renders the frame
@@ -151,19 +180,71 @@ function Scene (sceneObj, movie) {
 			var actor = this.actors[i];
 			var prevFrame = null;
 			for(var j = 0; j < actor.events.length; j++) {
-				var event = actor.events[i];
+				var event = actor.events[j];
 				var frame = event.frame;
 				var source = null; // previous frame
 				var target = null; // target frame
-				console.log(event, frameIndex, event.frame);
-				prevEvent = actor.events[i-1];
+				// console.log(event, frameIndex, event.frame);
+				prevEvent = actor.events[j-1];
+				console.log("G", prevEvent);
+				console.log(actor.events);
 				if(typeof(prevEvent) === "undefined") {
 					prevEvent = {
 						"frame":0,
 						position: actor.position
 					};
+				} else {
+					console.log("T");
 				}
-				console.log(frameIndex, "PrevEvent", prevEvent.frame, event.frame,  frameIndex <= event.frame);
+				
+				 console.log(frameIndex, "PrevEvent", prevEvent.frame, event.frame,  frameIndex <= event.frame);
+				if(frameIndex > prevEvent.frame && frameIndex <= event.frame) {
+					console.log("FCT");
+					var percentFinished =  (frameIndex -prevEvent.frame) / (event.frame - prevEvent.frame);
+					console.log("%", percentFinished);
+					var newPosition = null;
+					if(typeof(prevEvent) === "undefined") {
+						newPosition = event;
+					
+					} else {
+						// console.log("blend", percentFinished, blend(prevEvent, event, percentFinished));
+						
+						// console.log("blend", prevEvent, event, percentFinished);
+						newPosition = blend(prevEvent, event, percentFinished);	
+						// console.log("T", newPosition);
+					}
+					// console.log("FEW", newPosition);
+					// console.log(actor.body.position);
+					// console.log("D", actor.body.position.x);
+					actor.body.position = newPosition.position;
+					actor.body.rotation = newPosition.rotation;
+					// console.log("Dw", actor.body.position.x);
+					// console.log(actor.body);
+					// console.log("df", newPosition);
+				}
+			}
+		}
+		
+		for(var i = 0; i < this.objects.length; i++) {
+			var object = this.objects[i];
+			for(var j = 0; j < object.events.length; j++) {
+				var event = object.events[i];
+				var frame = event.frame;
+				var source = null; // previous frame
+				var target = null; // target frame
+				// console.log(event, frameIndex, event.frame);
+				prevEvent = object.events[i-1];
+				console.log(object.events);
+				console.log(preEvent);
+				if(typeof(prevEvent) === "undefined") {
+					prevEvent = {
+						"frame":0,
+						position: object.position
+					};
+				} else {
+					console.log("A");
+				}
+				// console.log(frameIndex, "PrevEvent", prevEvent.frame, event.frame,  frameIndex <= event.frame);
 				if(frameIndex >= prevEvent.frame && frameIndex <= event.frame) {
 				
 					var percentFinished =  frameIndex / (event.frame - prevEvent.frame) ;
@@ -173,49 +254,20 @@ function Scene (sceneObj, movie) {
 						newPosition = event;
 					
 					} else {
-						console.log("blend", percentFinished, blend(prevEvent, event, percentFinished));
+						// console.log("blend", percentFinished, blend(prevEvent, event, percentFinished));
 						
-						console.log("blend", prevEvent, event, percentFinished);
+						// console.log("blend", prevEvent, event, percentFinished);
 						newPosition = blend(prevEvent, event, percentFinished);	
-						console.log("T", newPosition);
+						// console.log("T", newPosition);
 					}
-					console.log("FEW", newPosition);
-					console.log(actor.body.position);
-					console.log("D", actor.body.position.x);
-					actor.body.position = newPosition.position;
-					actor.body.rotation = newPosition.rotation;
-					console.log("Dw", actor.body.position.x);
-					console.log(actor.body);
-					console.log("df", newPosition);
-				}
-			}
-		}
-		
-		for(var i = 0; i < this.objects.length; i++) {
-			var actor = this.objects[i];
-			for(var j = 0; j < actor.events.length; j++) {
-				var frame = event.frame;
-				var source = null; // previous frame
-				var target = null; // target frame
-				if(event.frame == Math.floor(frameIndex)) {
-					source = event;
-					
-				}
-				if(event.frame == Math.ceil(frameIndex)) {
-					target = event;
-					
-					var percentFinished =  (frameIndex - source) / target;
-					
-					
-					if(source == null) {
-						source = this.position;
-					}
-					var newPosition = blend(source, target, percentFinished);
-					
-					actor.body.position = newPosition.position;
-					actor.body.rotation = newPosition.rotation;
-					console.log("POS", actor.body.position);
-					
+					// console.log("FEW", newPosition);
+					// console.log(actor.body.position);
+					// console.log("D", actor.body.position.x);
+					object.body.position = newPosition.position;
+					object.body.rotation = newPosition.rotation;
+					// console.log("Dw", actor.body.position.x);
+					// console.log(actor.body);
+					// console.log("df", newPosition);
 				}
 			}
 		}
@@ -242,12 +294,12 @@ function Actor(actorObj, scene) {
 		  map: THREE.ImageUtils.loadTexture(actorObj.material),
 		  transparent: true
 	});
-	var head = new THREE.Mesh(new THREE.SphereGeometry(120, 30, 5, 50), material);
-	var hands = [new THREE.Mesh(new THREE.SphereGeometry(120, 30, 5, 50), material),
-		new THREE.Mesh(new THREE.SphereGeometry(120, 30, 5, 50), material)];
+	var head = new THREE.Mesh(new THREE.SphereGeometry(20, 30, 5, 50), material);
+	var hands = [new THREE.Mesh(new THREE.SphereGeometry(5, 30, 5, 50), material),
+		new THREE.Mesh(new THREE.SphereGeometry(5, 30, 5, 50), material)];
 		
-	var foots = [new THREE.Mesh(new THREE.SphereGeometry(120, 30, 5, 50), material),
-		new THREE.Mesh(new THREE.SphereGeometry(120, 30, 5, 50), material)];
+	var foots = [new THREE.Mesh(new THREE.SphereGeometry(5, 30, 5, 50), material),
+		new THREE.Mesh(new THREE.SphereGeometry(5, 30, 5, 50), material)];
 	head._parent = this;
 	hands[0]._parent = this;
 	hands[0].type = "hand";
@@ -266,10 +318,10 @@ function Actor(actorObj, scene) {
 	foots[0].position.y = 0;
 	foots[0].position.z = 0;
 	foots[1].position.x = -50;
-	foots[1].position.y = 150;
+	foots[1].position.y = -32;
 	foots[1].position.z = 0;
 	hands[0].position.x = 50;
-	hands[0].position.y = 0;
+	hands[0].position.y = -32;
 	hands[0].position.z = 0;
 	hands[1].position.x = 150;
 	hands[1].position.y = 50;
@@ -295,9 +347,9 @@ function Actor(actorObj, scene) {
 		this.body.rotation = rotation;
 	});*/
 	this.body.add(foots[1]);
-	console.log("ActorObj", actorObj);
+	// console.log("ActorObj", actorObj);
 	this.events = actorObj.events;
-	
+	console.log(this.events);
 }	
 function SObject(objectObj, scene) {
 	this.obj = objectObj;
@@ -322,6 +374,7 @@ function SObject(objectObj, scene) {
 		
 	}
 	this.events = objectObj.events;
+	this.position = objectObj.position;
 	this.body.position = objectObj.position;
 	this.body.rotation = objectObj.rotation;
 }
@@ -345,11 +398,12 @@ window.onload = function() {
 	var movie1 = new Movie("movies/test");
 	currentMovie = movie1;
 	movie1.setScene(0);
+	//movie1.play();
 	// request new frame
 	// request new frame
 	requestAnimFrame(function(){
 		animate(lastTime);
 	});
-	movie1.currentScene.renderFrame(3);
+	
 	
 };
