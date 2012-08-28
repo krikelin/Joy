@@ -1,0 +1,24 @@
+{
+	"motions":[
+		{
+			"name":"WalkLeft",
+			"motion": function (frameIndex, actor, body) {
+				var index = frameIndex / 5;
+				var x =  Math.sine(index) * 50 -(Math.cos(index)*50);
+				var y =  Math.cos(index) * 50 -(Math.sin(index)*50);
+				body.position.x += x;
+				body.position.y += y;
+			}
+		},
+		{
+			"name":"WalkRight",
+			"motion": function (frameIndex, actor, body) {
+				var index = frameIndex / 5;
+				var x =  -Math.sine(index) * 50 +(Math.cos(index)*50);
+				var y =  -Math.cos(index) * 50 +(Math.sin(index)*50);
+				body.position.x = x;
+				body.position.y = y;
+			}
+		}
+	]
+}

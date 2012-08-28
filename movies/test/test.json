@@ -1,0 +1,29 @@
+{
+	"title":"Test",
+	"scenes":[
+		{
+			"duration":15,
+			"title":"TestScene",
+			"characters":[
+				{
+					"id":"joy",
+					"name":"Joy"
+				}
+			],
+			"objects":[
+				{
+					"id":"board",
+					"title":"Board",
+					"position":{
+						"x":5,
+						"y":5
+					}
+				}
+			],
+			"actions":{
+				"target":"joy",
+				
+			}
+		}
+	]
+}

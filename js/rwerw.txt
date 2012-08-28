@@ -1,0 +1,70 @@
+this.onCollision = function (body) {
+		if(this.gone)
+			return;
+		
+		var vector = body.mario.position.subSelf( body.mario.position ).normalize();
+		var ray = new THREE.Ray(body.mario.position, vector);
+		var intersects = ray.intersectObjects(this.cube);
+		if (intersects.length > 0) {
+			if (intersects[0].distance < 5) {
+				// console.log(body.move_y);
+				if(!jump && body.move_y <= 0 ) {
+					if(body.move_y <0)
+					body.move_y = 0;
+					
+					foundGround = true;
+					this.type.onCollision(body, COLLISION_FROM_ABOVE);
+				//	console.log("AGFA");
+				return;
+				} 
+				
+				// If left
+				if(body.move_x > 0 ) {
+					body.move_x = -0;
+					
+					this.type.onCollision(body, COLLISION_FROM_LEFT);
+					return;
+				}
+				// If right
+				if(body.move_x < 0) {
+					body.move_x = -0;
+				
+					this.type.onCollision(body, COLLISION_FROM_RIGHT);
+					return;
+				}
+				// If above
+				
+				// If below
+				if(body.move_y > 0 ) {
+					body.move_y = -2;
+					
+					this.type.onCollision(body, COLLISION_FROM_BELOW);
+					return;
+				}
+			
+				
+				
+				
+				// If behind
+				if(body.move_z > 0 ) {
+					body.move_z = -0;
+					
+					this.type.onCollision(body, COLLISION_FROM_BEHIND);
+					return;
+				}
+				// If in front
+				if(body.move_z < 0) {
+					body.move_z = -0;
+				//	body.x = this.x + 50;
+					this.type.onCollision(body, COLLISION_FROM_FRONT);
+					return;
+					
+				}
+			}
+			
+		}
+		
+		
+		
+		
+	};

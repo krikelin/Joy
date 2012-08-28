@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				background: black;
+				overflow: hidden;
+			}
+		</style>
+		<script type="text/JavaScript" src="js/Three.js"></script>
+		<script src="js/physi.js" type="text/JavaScript"></script>
+		<script src="js/ammo.js" type="text/JavaScript"></script>
+		<script src="js/joy.js" type="text/JavaScript"></script>
+		<script src="js/blend.js" type="text/JavaScript"></script>
+		<script language="JavaScript">
+			var c = {
+				title:"CT",
+				x: 5,
+				y: 8,
+				z: 12,
+				n: {
+				x: 25,
+				y: 28,
+				z: 12
+				}
+			};
+			var d = {
+				title:"AB",
+				x: 8,
+				y: 12,
+				z: 15,
+				n: {
+				x: 15,
+				y: 08,
+				z: 5
+				}
+			};
+			var cf = blend(c,d, 0.5);
+			console.log(c, d, cf);
+		</script>
+	</head>
+	<body>
+		
